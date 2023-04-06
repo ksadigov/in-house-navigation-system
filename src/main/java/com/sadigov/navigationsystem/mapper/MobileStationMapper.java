@@ -18,6 +18,7 @@ public interface MobileStationMapper {
     @Mapping(target = "mobileId", source = "mobileStationId")
     @Mapping(target = "errorCode", constant = "400")
     @Mapping(target = "errorDescription", constant = "Mobile station has not reported a location yet")
+    @Mapping(target = "errorRadius", constant = "-1f")
     LocationDto mobileStationHasNoLocation(UUID mobileStationId);
 
     @Mapping(target = "longitude", source = "mobileStation.lastKnownLongitude")
