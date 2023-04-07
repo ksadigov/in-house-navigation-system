@@ -32,7 +32,7 @@ class LocationControllerIntegrationTest {
     private WebApplicationContext context;
 
     @BeforeEach
-    void beforeEach() {
+    void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
