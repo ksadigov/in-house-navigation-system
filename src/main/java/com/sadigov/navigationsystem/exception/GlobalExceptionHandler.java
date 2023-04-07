@@ -14,7 +14,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = {MobileStationNotFoundException.class, BaseStationNotFoundException.class})
+    @ExceptionHandler(value = BaseStationNotFoundException.class)
     public Map<String, String> handleHttpNotFound(Exception e) {
         log.error("Not Found", e);
         return buildErrorResponseBody(e);
