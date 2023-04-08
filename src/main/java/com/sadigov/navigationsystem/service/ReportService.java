@@ -23,7 +23,7 @@ public class ReportService {
                         reportEventDto.getBaseStationId().toString())));
 
         reportEventDto.getReports().stream()
-                .filter(mobileStationReportDto -> mobileStationReportDto.getDistance() <= baseStation.getDetectionRadiusInMeters())
+                .filter(reportDto -> reportDto.getDistance() <= baseStation.getDetectionRadiusInMeters())
                 .map(ReportDto::getMobileStationId).distinct()
                 .map(mobileStationId -> mobileStationRepository.findById(mobileStationId)
                         .orElseGet(() -> {
