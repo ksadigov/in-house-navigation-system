@@ -40,35 +40,37 @@ class ReportServiceTest {
     void testSaveReportEvent_validDto_shouldSaveMobileStation() {
         UUID baseStationId = UUID.randomUUID();
         UUID mobileStationId = UUID.randomUUID();
-        float distance = 5f;
+        float distance = 100f;
         float x = 1.0f;
         float y = 2.0f;
         var reportDto = new ReportDto();
-        reportDto.setMobileStationId(mobileStationId);
         reportDto.setDistance(distance);
+        reportDto.setMobileStationId(mobileStationId);
 
         var reportEventDto = new ReportEventDto();
         reportEventDto.setBaseStationId(baseStationId);
         reportEventDto.setReports(Collections.singletonList(reportDto));
 
         var baseStation = new BaseStation();
-        baseStation.setUuid(baseStationId);
         baseStation.setX(x);
         baseStation.setY(y);
-        baseStation.setDetectionRadiusInMeters(100f);
+        baseStation.setDetectionRadiusInMeters(150.0f);
 
         var mobileStation = new MobileStation();
         mobileStation.setUuid(mobileStationId);
+        mobileStation.setLastKnownLongitude(x);
+        mobileStation.setLastKnownLatitude(y);
 
         when(baseStationRepository.findById(baseStationId)).thenReturn(Optional.of(baseStation));
-        when(mobileStationRepository.findById(mobileStationId)).thenReturn(Optional.of(mobileStation));
+        when(mobileStationRepository.findById(mobileStationId)).thenReturn(Optional.empty());
+        when(mobileStationRepository.save(any(MobileStation.class))).thenReturn(mobileStation);
 
         testObj.saveReportEvent(reportEventDto);
 
-        // Assert
-        verify(baseStationRepository).findById(baseStationId);
-        verify(mobileStationRepository).findById(mobileStationId);
-        verify(mobileStationRepository).save(mobileStation);
+        // Verify the interactions
+        verify(baseStationRepository, times(1)).findById(baseStationId);
+        verify(mobileStationRepository, times(1)).findById(mobileStationId);
+        verify(mobileStationRepository, times(2)).save(any(MobileStation.class));
 
         assertThat(mobileStation.getLastKnownLongitude()).isEqualTo(x);
         assertThat(mobileStation.getLastKnownLatitude()).isEqualTo(y);
